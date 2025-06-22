@@ -56,7 +56,7 @@ public class PersonController {
 
 
     @GetMapping(value = "{id}", produces = {"application/json", "application/xml"})
-    public Person getPerson(@PathVariable Long id){
+    public Person getPerson(@PathVariable String id){
         return personRespository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Citizen with given id does not exist!"));
     }
 
@@ -77,7 +77,7 @@ public class PersonController {
     }
 
     @PutMapping(value = "{id}", consumes = {"application/json", "application/xml"})
-    public ResponseEntity<Person> updatePerson(@PathVariable String id, @Valid @RequestBody Person person){
+    public ResponseEntity<Object> updatePerson(@PathVariable String id, @Valid @RequestBody Person person){
         if (!person.getAt().equals(id))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Trying to update citizen with wrong id!");
         else return personRespository.findById(id)//////////////////////////Long and AT is String!!!!!!
@@ -97,7 +97,7 @@ public class PersonController {
     }
 
     @DeleteMapping("{id}")
-    ResponseEntity<?> deletePerson(@PathVariable Long id) {
+    ResponseEntity<?> deletePerson(@PathVariable String id) {
         return personRespository.findById(id)//////////////////////////Long and AT is String!!!!!!
                 .map(currentPerson -> {
                     personRespository.deleteById(id);
