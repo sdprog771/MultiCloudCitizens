@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PersonRespository extends JpaRepository<Person, Long> {
+public interface PersonRespository extends JpaRepository<Person, String> {
     List<Person> findByFields(Long at, String firstName, String lastName, String gender, LocalDateTime birthDate, Long afm, String homeAddress);
 }
