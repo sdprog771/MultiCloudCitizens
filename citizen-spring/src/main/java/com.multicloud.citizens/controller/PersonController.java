@@ -30,7 +30,7 @@ public class PersonController {
     }
 
     @GetMapping(produces = {"application/json", "application/xml"})
-    public List<Person> getAllPersons(@RequestParam(required = false) Long at,
+    public List<Person> getAllPersons(@RequestParam(required = false) String at,
                                       @RequestParam(required = false) String firstName,
                                       @RequestParam(required = false) String lastName,
                                       @RequestParam(required = false) String gender,
@@ -38,7 +38,7 @@ public class PersonController {
                                       @RequestParam(required = false) Long afm,
                                       @RequestParam(required = false) String homeAddress){
 
-        boolean atIsEmpty = (at == null && at ==0);
+        boolean atIsEmpty = (at == null && at.isBlank());
         boolean firstNameIsEmpty = (firstName == null && firstName.isBlank());
         boolean lastNameIsEmpty = (lastName == null && lastName.isBlank());
         boolean genderIsEmpty = (gender == null && gender.isBlank());
@@ -62,7 +62,7 @@ public class PersonController {
 
     @PostMapping(consumes = {"application/json", "application/xml"})
     public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person) throws UnknownHostException, URISyntaxException {
-        if(personRespository.findById(person.getAt()).isPresent()) //////////////////////////Long and AT is String!!!!!!
+        if(personRespository.findById(person.getAt()).isPresent())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Citizen already exists!");
 		else {
             personRespository.save(person);
@@ -80,7 +80,7 @@ public class PersonController {
     public ResponseEntity<Object> updatePerson(@PathVariable String id, @Valid @RequestBody Person person){
         if (!person.getAt().equals(id))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Trying to update citizen with wrong id!");
-        else return personRespository.findById(id)//////////////////////////Long and AT is String!!!!!!
+        else return personRespository.findById(id)
                 .map(currentPerson -> {
                     currentPerson.setAt(person.getAt());
                     currentPerson.setFirstName(person.getFirstName());
@@ -98,7 +98,7 @@ public class PersonController {
 
     @DeleteMapping("{id}")
     ResponseEntity<?> deletePerson(@PathVariable String id) {
-        return personRespository.findById(id)//////////////////////////Long and AT is String!!!!!!
+        return personRespository.findById(id)
                 .map(currentPerson -> {
                     personRespository.deleteById(id);
                     return ResponseEntity.noContent().build();

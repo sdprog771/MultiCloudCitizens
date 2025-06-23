@@ -14,6 +14,7 @@ import com.multicloud.citizens.repository.PersonRespository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -94,10 +95,10 @@ public class DBTest implements TestInterface{
         }
         assertEquals(matches,3);
 
-        persons = personRespository.findById("AO123456");
+        persons = personRespository.findByAt("AO123456");
         assertEquals(persons.size(),1);
         assertEquals(persons.get(0),person1);
-        persons = personRespository.findById("AO123457");
+        persons = personRespository.findByAt("AO123457");
         assertEquals(persons.size(),1);
         assertEquals(persons.get(0),person2);
 

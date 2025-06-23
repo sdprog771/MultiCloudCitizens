@@ -3,12 +3,13 @@ package com.multicloud.citizens.unit;
 import com.multicloud.citizens.model.Person;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import javax.xml.validation.Validator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class PersonValidTest implements TestInterface{
         @BeforeAll
         static void constructValidator() {
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-            validator = (Validator) factory.getValidator();
+            validator = factory.getValidator();
         }
 
         private static List<String> getMessages(Set<ConstraintViolation<Person>> viols){

@@ -10,5 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface PersonRespository extends JpaRepository<Person, String> {
-    List<Person> findByFields(Long at, String firstName, String lastName, String gender, LocalDateTime birthDate, Long afm, String homeAddress);
+    List<Person> findByFields(String at, String firstName, String lastName, String gender, LocalDateTime birthDate, Long afm, String homeAddress);
+    List<Person> findByAt(String at);
 }
