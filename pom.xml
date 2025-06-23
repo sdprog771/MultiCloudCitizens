@@ -30,12 +30,12 @@
         <junit.version>5.10.2</junit.version>
         <junit.platform.version>1.10.2</junit.platform.version>
 
-        <java.version>24</java.version>
+        <java.version>18</java.version>
     </properties>
 
     <modules>
-        <module>citizen-client-spring</module>
         <module>citizen-model-spring</module>
+        <module>citizen-client-spring</module>
         <module>citizen-spring</module>
     </modules>
 

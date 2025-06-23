@@ -1,14 +1,12 @@
-package citizen_client.client;
+package com.multicloud.citizen_client.client;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
+import com.multicloud.citizen_client.configuration.ImmutableApiConfiguration;
+import com.multicloud.citizens.Person;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-
-import com.multicloud.citizens.Person;
-import citizen_client.configuration.ImmutableApiConfiguration;
 
 @Component
 public class MyRestClient {
@@ -102,8 +100,8 @@ public class MyRestClient {
         person.setAt(at);
         person.setFirstName("First name" + counter);
         person.setLastName("Last name" + counter);
-        person.setBirthDate("Birth date" + counter);
-        person.setAfm("AFM" + counter);
+//        person.setBirthDate();
+//        person.setAfm("AFM" + counter);
         person.setHomeAddress("Home address" + counter);
         counter++;
 

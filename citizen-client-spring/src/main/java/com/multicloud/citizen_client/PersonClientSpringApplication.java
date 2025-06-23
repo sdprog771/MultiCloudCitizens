@@ -1,13 +1,12 @@
-package citizen_client.client;
+package com.multicloud.citizen_client;
+import com.multicloud.citizen_client.client.MyRestClient;
+import com.multicloud.citizen_client.configuration.ImmutableApiConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.MediaType;
-
-import citizen_client.client.MyRestClient;
-import citizen_client.configuration.ImmutableApiConfiguration;
 
 @SpringBootApplication
 @EnableConfigurationProperties(ImmutableApiConfiguration.class)
@@ -50,7 +49,7 @@ public class PersonClientSpringApplication implements CommandLineRunner{
         //Deleting first person & checking the deletion
         mrc.deletePerson(at1);
         mrc.deletePerson(at1);
-        mrc.getPerson(json);
+        mrc.getPersons(json);
     }
 
 }

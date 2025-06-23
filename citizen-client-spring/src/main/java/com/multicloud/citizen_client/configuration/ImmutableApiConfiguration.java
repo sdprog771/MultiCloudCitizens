@@ -1,4 +1,4 @@
-package citizen_client.configuration;
+package com.multicloud.citizen_client.configuration;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

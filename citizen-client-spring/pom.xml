@@ -7,13 +7,23 @@
         <groupId>com.multiCloudTask</groupId>
         <artifactId>Citizens</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <!--<relativePath/>--> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.multiCloudTask</groupId>
     <artifactId>citizen-client-spring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>citizen-client-spring</name>
     <description>Citizens-client</description>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.multiCloudTask</groupId>
+                <artifactId>citizen-model-spring</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
