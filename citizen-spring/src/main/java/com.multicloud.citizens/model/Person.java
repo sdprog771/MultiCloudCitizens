@@ -1,11 +1,16 @@
 package com.multicloud.citizens.model;
 
+import com.multicloud.citizens.validation.NineDigitLong;
+import com.multicloud.citizens.validation.ValidDateFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 @Entity
@@ -34,13 +39,13 @@ public class Person {
     private String gender;
 
     @Column(name="birthDate_")
-    @NotBlank(message = "Date is mandatory.")
-    @Pattern( regexp = "(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(19|20)\\\\d{2}", message="Insert a valid date,[DD-MM-YYYY].")
+    @NotNull(message = "Date is mandatory.")
+    @ValidDateFormat
     @Basic(optional = false)
-    private LocalDateTime birthDate;
+    private Date birthDate;
 
     @Column(name="afm_")
-    @Pattern( regexp= "^\\d{9}$", message ="Insert a valid number, [0-9] up to nine numbers.")
+    @NineDigitLong
     private Long afm;
 
     @Column(name="homeAddress_")
@@ -63,20 +68,20 @@ public class Person {
         private String firstName = null;
         private String lastName = null;
         private String gender = null;
-        private LocalDateTime birthDate = null;
+        private Date birthDate = null;
         private Long afm = null;
         private String homeAddress = null;
 
         private static void checkSingleValue(String value, String message) throws IllegalArgumentException{
             if (value == null || value.trim().equals("")) throw new IllegalArgumentException(message + " cannot be null or empty");
         }
-        private static void checkSingleValue(LocalDateTime value, String message) throws IllegalArgumentException{
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-            String formattedDate = value.format(formatter);
-            if (value == null || formattedDate.trim().equals("")) throw new IllegalArgumentException(message + " cannot be null or empty");
+        private static void checkSingleValue(Date value, String message){
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.ENGLISH);
+            String formattedDateString = formatter.format(value);
+            if (value == null || formattedDateString.trim().equals("")) throw new IllegalArgumentException(message + " cannot be null or empty");
         }
 
-        public Builder(String at, String firstName, String lastName, String gender,LocalDateTime birthDate) throws IllegalArgumentException{
+        public Builder(String at, String firstName, String lastName, String gender, Date birthDate) throws IllegalArgumentException{
             checkSingleValue(at, "AT");
             checkSingleValue(firstName, "First name");
             checkSingleValue(lastName, "Last name");
@@ -145,11 +150,11 @@ public class Person {
         this.gender = gender;
     }
 
-    public LocalDateTime getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDateTime birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 

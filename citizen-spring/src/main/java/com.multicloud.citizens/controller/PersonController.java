@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class PersonController {
                                       @RequestParam(required = false) String firstName,
                                       @RequestParam(required = false) String lastName,
                                       @RequestParam(required = false) String gender,
-                                      @RequestParam(required = false) LocalDateTime birthDate,
+                                      @RequestParam(required = false) Date birthDate,
                                       @RequestParam(required = false) Long afm,
                                       @RequestParam(required = false) String homeAddress){
 
@@ -47,7 +48,7 @@ public class PersonController {
         boolean homeAddressIsEmpty = (homeAddress == null && homeAddress.isBlank());
 
         if(!atIsEmpty || !firstNameIsEmpty || !lastNameIsEmpty || !genderIsEmpty || !birthDateIsEmpty || !afmIsEmpty || !homeAddressIsEmpty) {
-            return personRespository.findByFields(at, firstName, lastName, gender, birthDate, afm, homeAddress);
+            return personRespository.findByAtOrFirstNameOrLastNameOrGenderOrBirthDateOrAfmOrHomeAddress(at, firstName, lastName, gender, birthDate, afm, homeAddress);
         }
         else {
             return personRespository.findAll();

@@ -3,13 +3,20 @@ package com.multicloud.citizens.unit;
 import com.multicloud.citizens.model.Person;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PersonUtility {
 
+    private final static SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
     public static Person createPositivePerson(ArgumentsAccessor argumentsAccessor, int start){
+        Date birthDateValue = null;
+
         String at = argumentsAccessor.getString(start+0);
         String firstName = argumentsAccessor.getString(start+1);
         String lastName = argumentsAccessor.getString(start+2);
@@ -18,10 +25,18 @@ public class PersonUtility {
         Long afm = argumentsAccessor.getLong(start+5);
         String homeAddress = argumentsAccessor.getString(start+6);
 
-        return new Person.Builder(at,firstName, lastName, gender, LocalDateTime.parse(birthdate)).afm(afm).homeAddress(homeAddress).build();
+        try {
+            birthDateValue = formatter.parse(birthdate);
+        }catch (ParseException e){
+            throw new IllegalArgumentException("The birthDate is not parseable.");
+        }
+
+        return new Person.Builder(at,firstName, lastName, gender, birthDateValue).afm(afm).homeAddress(homeAddress).build();
     }
 
     public static void createNegativePerson(ArgumentsAccessor argumentsAccessor){
+        Date birthDateValue = null;
+
         String at = argumentsAccessor.getString(0);
         String firstName = argumentsAccessor.getString(1);
         String lastName = argumentsAccessor.getString(2);
@@ -30,7 +45,13 @@ public class PersonUtility {
         Long afm = argumentsAccessor.getLong(5);
         String homeAddress = argumentsAccessor.getString(6);
 
-        Person person = new Person.Builder(at,firstName, lastName, gender, LocalDateTime.parse(birthdate)).afm(afm).homeAddress(homeAddress).build();
+        try {
+            birthDateValue = formatter.parse(birthdate);
+        }catch (ParseException e){
+            throw new IllegalArgumentException("The birthDate is not parseable.");
+        }
+
+        Person person = new Person.Builder(at,firstName, lastName, gender, birthDateValue).afm(afm).homeAddress(homeAddress).build();
 
         System.out.println("Person: " + person);
     }

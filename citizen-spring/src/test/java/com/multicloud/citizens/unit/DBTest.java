@@ -8,13 +8,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import com.multicloud.citizens.repository.PersonRespository;
 
-import java.time.LocalDateTime;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +27,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 public class DBTest implements TestInterface{
 
+    @Autowired
     PersonRespository personRespository;
+
+    private final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
 
     @ParameterizedTest
@@ -41,12 +47,18 @@ public class DBTest implements TestInterface{
     @ParameterizedTest
     @Order(2)
     @CsvSource({
-            "AT1, FirstName1, LastName1, Gender1, DD-MM-YYYY",
-            "AT2, FirstName2, LastName2, Gender2, DD-MM-YYYY",
-            "AT3, FirstName3, LastName3, Gender3, DD-MM-YYYY",
+            "AT1, FirstName1, LastName1, Gender1, 01-01-2000",
+            "AT2, FirstName2, LastName2, Gender2, 02-02-2000",
+            "AT3, FirstName3, LastName3, Gender3, 03-03-2000",
     })
-    void checkPersonDeletion(String at, String firstName, String lastName, String gender, LocalDateTime birthDate) {
-        Person person = new Person.Builder(at, firstName, lastName, gender, birthDate).build();
+    void checkPersonDeletion(String at, String firstName, String lastName, String gender, String birthDate) {
+        Date birthDateDate = null;
+        try {
+            birthDateDate = formatter.parse(birthDate);
+        } catch (ParseException e){
+            throw new IllegalArgumentException("birthDate is not parseable");
+        }
+        Person person = new Person.Builder(at, firstName, lastName, gender, birthDateDate).build();
         personRespository.save(person);
         personRespository.deleteById(at);
         person = personRespository.findById(at).orElse(null);
@@ -56,12 +68,18 @@ public class DBTest implements TestInterface{
     @ParameterizedTest
     @Order(4)
     @CsvSource({
-            "AT1, FirstName1, LastName1, Gender1, DD-MM-YYYY",
-            "AT2, FirstName2, LastName2, Gender2, DD-MM-YYYY",
-            "AT3, FirstName3, LastName3, Gender3, DD-MM-YYYY",
+            "AT123456, FirstName1, LastName1, Gender1, 01-01-2000",
+            "AT789123, FirstName2, LastName2, Gender2, 02-02-2000",
+            "AT456789, FirstName3, LastName3, Gender3, 03-03-2000",
     })
-    void checkPersonUpdate(String at, String firstName, String lastName, String gender, LocalDateTime birthDate) {
-        Person person = new Person.Builder(at, firstName, lastName, gender, birthDate).build();
+    void checkPersonUpdate(String at, String firstName, String lastName, String gender, String birthDate) {
+        Date birthDateDate = null;
+        try {
+            birthDateDate = formatter.parse(birthDate);
+        } catch (ParseException e){
+            throw new IllegalArgumentException("birthDate is not parseable");
+        }
+        Person person = new Person.Builder(at, firstName, lastName, gender, birthDateDate).build();
         personRespository.save(person);
         Random r = new Random();
         int choice = r.nextInt(3);
@@ -78,9 +96,22 @@ public class DBTest implements TestInterface{
     @Test
     @Order(3)
     void checkPersonRetrieval() {
-        Person person1 = new Person.Builder("AO123456", "FirstNameA", "LastNameA", "GenderA", LocalDateTime.parse("20-12-2000")).build();
-        Person person2 = new Person.Builder("AO123457", "FirstNameB", "LastNameB", "GenderB", LocalDateTime.parse("10-12-2000")).build();
-        Person person3 = new Person.Builder("AO123458", "FirstNameC", "LastNameC", "GenderC", LocalDateTime.parse("02-12-2000")).build();
+        Date birthDate1 = null;
+        Date birthDate2 = null;
+        Date birthDate3 = null;
+
+        try {
+            birthDate1 = formatter.parse("01-01-2000");
+            birthDate2 = formatter.parse("02-02-2000");
+            birthDate3 = formatter.parse("03-03-2000");
+
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("BirthDates are not parseable.");
+        }
+
+        Person person1 = new Person.Builder("AO123456", "FirstNameA", "LastNameA", "GenderA", birthDate1).build();
+        Person person2 = new Person.Builder("AO123457", "FirstNameB", "LastNameB", "GenderB", birthDate2).build();
+        Person person3 = new Person.Builder("AO123458", "FirstNameC", "LastNameC", "GenderC", birthDate3).build();
         personRespository.save(person1);
         personRespository.save(person2);
         personRespository.save(person3);

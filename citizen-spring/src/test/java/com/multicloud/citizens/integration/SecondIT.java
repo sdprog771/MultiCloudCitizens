@@ -12,8 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import static io.restassured.RestAssured.given;
@@ -27,6 +31,8 @@ import static org.hamcrest.Matchers.*;
 public class SecondIT implements TestLifecycleLogger {
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
 
     @BeforeAll
     public void initialiseRestAssuredMockMvcWebApplicationContext() {
@@ -42,6 +48,7 @@ public class SecondIT implements TestLifecycleLogger {
 
     private Person createPerson(String at) {
         Random r = new Random();
+        Date birthDateValue = null;
         Person person = new Person();
         person.setAt(at);
 
@@ -51,7 +58,12 @@ public class SecondIT implements TestLifecycleLogger {
         person.setLastName("LastName" + lastNameId);
         int genderId = r.nextInt(10) + 1;
         person.setGender("FirstName" + genderId);
-        person.setBirthDate(LocalDateTime.parse("20-10-2000"));
+        try{
+            birthDateValue = formatter.parse("20-10-2000");
+        }catch(ParseException e){
+            throw new IllegalArgumentException("The birthDate is not parseable.");
+        }
+        person.setBirthDate(birthDateValue);
 
         return person;
     }

@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -111,7 +112,7 @@ class PersonTest implements TestInterface {
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = { " ", "   ", "\t", "\n" })
-    void checkNegativeValuesforBirthDate(LocalDateTime birthDate) {
+    void checkNegativeValuesforBirthDate(Date birthDate) {
         Person person = new Person();
         person.setBirthDate(birthDate);
         assertNull(person.getBirthDate());
@@ -119,7 +120,7 @@ class PersonTest implements TestInterface {
 
     @ParameterizedTest
     @ValueSource(strings = { "10-01-2000", "20-02-2000" })
-    void checkPositiveValuesforBirthDate(LocalDateTime birthDate) {
+    void checkPositiveValuesforBirthDate(Date birthDate) {
         Person person = new Person();
         person.setBirthDate(birthDate);
         assertEquals(person.getBirthDate(),birthDate);
