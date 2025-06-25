@@ -15,6 +15,8 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestClassOrder(ClassOrderer.OrderAnnotation.class)
+@Order(1)
 @DisplayName("RestPerson API Testing")
 @TestPropertySource("classpath:application-test.properties")
 public class FirstIT implements TestLifecycleLogger {
