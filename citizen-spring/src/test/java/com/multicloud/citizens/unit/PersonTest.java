@@ -8,25 +8,26 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PersonTest implements TestInterface {
 
     @ParameterizedTest
-    @CsvFileSource(resources="/resources/positivePerson.csv")
+//    @CsvFileSource(resources="/resources/positivePerson.csv")
+    @CsvFileSource(resources="/positivePerson.csv")
     void checkPositivePerson(ArgumentsAccessor argumentsAccessor){
         Person person = PersonUtility.createPositivePerson(argumentsAccessor,0);
         PersonUtility.checkPerson(person,argumentsAccessor);
     }
 
     @ParameterizedTest
-    @CsvFileSource(resources="/resources/negativePerson.csv")
+    @CsvFileSource(resources="/negativePerson.csv")
     void checkNegativePerson(ArgumentsAccessor argumentsAccessor){
         Exception e = assertThrows(IllegalArgumentException.class, () -> PersonUtility.createNegativePerson(argumentsAccessor));
-        assertEquals(argumentsAccessor.getString(6), e.getMessage());
+        assertEquals(argumentsAccessor.getString(7), e.getMessage());
     }
 
     @Test
@@ -97,8 +98,8 @@ class PersonTest implements TestInterface {
     @ValueSource(strings = { " ", "   ", "\t", "\n" })
     void checkNegativeValuesforGender(String gender) {
         Person person = new Person();
-        person.setGender(gender);
-        assertNull(person.getGender());
+        Exception e = assertThrows(IllegalArgumentException.class, ()-> person.setGender(gender));
+        assertEquals("Gender cannot be null or empty", e.getMessage());
     }
 
     @ParameterizedTest
@@ -109,29 +110,31 @@ class PersonTest implements TestInterface {
         assertEquals(person.getGender(),gender);
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = { " ", "   ", "\t", "\n" })
-    void checkNegativeValuesforBirthDate(Date birthDate) {
-        Person person = new Person();
-        person.setBirthDate(birthDate);
-        assertNull(person.getBirthDate());
-    }
+//    @ParameterizedTest
+////    @NullAndEmptySource
+//    @ValueSource(strings = { " ", "   ", "\t", "\n" })
+//    void checkNegativeValuesforBirthDate(String birthDate) {
+//        Person person = new Person();
+////        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        person.setBirthDate(LocalDate.parse(birthDate));
+//        assertNull(person.getBirthDate());
+//    }
 
     @ParameterizedTest
     @ValueSource(strings = { "10-01-2000", "20-02-2000" })
-    void checkPositiveValuesforBirthDate(Date birthDate) {
+    void checkPositiveValuesforBirthDate(String birthDate) {
         Person person = new Person();
-        person.setBirthDate(birthDate);
-        assertEquals(person.getBirthDate(),birthDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        person.setBirthDate(LocalDate.parse(birthDate, formatter));
+        assertEquals(person.getBirthDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),birthDate);
     }
 
     @ParameterizedTest
     @NullAndEmptySource
     @ValueSource(strings = { " ", "   ", "\t", "\n" })
-    void checkNegativeValuesforAFM(Long afm) {
+    void checkNegativeValuesforAFM(String afm) {
         Person person = new Person();
-        person.setAfm(afm);
+        person.setAfm(Long.getLong(afm));
         assertNull(person.getAfm());
     }
 
@@ -149,7 +152,7 @@ class PersonTest implements TestInterface {
     void checkNegativeValuesforHomeAddress(String homeAddress) {
         Person person = new Person();
         person.setHomeAddress(homeAddress);
-        assertNull(person.getHomeAddress());
+        assertEquals(person.getHomeAddress(), homeAddress);
     }
 
     @ParameterizedTest

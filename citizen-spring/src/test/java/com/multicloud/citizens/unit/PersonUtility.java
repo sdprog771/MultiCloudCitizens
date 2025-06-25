@@ -3,19 +3,17 @@ package com.multicloud.citizens.unit;
 import com.multicloud.citizens.model.Person;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Locale;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PersonUtility {
 
-    private final static SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static Person createPositivePerson(ArgumentsAccessor argumentsAccessor, int start){
-        Date birthDateValue = null;
+        LocalDate birthDateValue = null;
 
         String at = argumentsAccessor.getString(start+0);
         String firstName = argumentsAccessor.getString(start+1);
@@ -26,8 +24,8 @@ public class PersonUtility {
         String homeAddress = argumentsAccessor.getString(start+6);
 
         try {
-            birthDateValue = formatter.parse(birthdate);
-        }catch (ParseException e){
+            birthDateValue = LocalDate.parse(birthdate, formatter);
+        }catch (DateTimeParseException e){
             throw new IllegalArgumentException("The birthDate is not parseable.");
         }
 
@@ -35,7 +33,7 @@ public class PersonUtility {
     }
 
     public static void createNegativePerson(ArgumentsAccessor argumentsAccessor){
-        Date birthDateValue = null;
+        LocalDate birthDateValue = null;
 
         String at = argumentsAccessor.getString(0);
         String firstName = argumentsAccessor.getString(1);
@@ -46,9 +44,9 @@ public class PersonUtility {
         String homeAddress = argumentsAccessor.getString(6);
 
         try {
-            birthDateValue = formatter.parse(birthdate);
-        }catch (ParseException e){
-            throw new IllegalArgumentException("The birthDate is not parseable.");
+            birthDateValue = LocalDate.parse(birthdate, formatter);
+        }catch (DateTimeParseException | NullPointerException e ){
+            throw new IllegalArgumentException("Birthdate cannot be null or empty");
         }
 
         Person person = new Person.Builder(at,firstName, lastName, gender, birthDateValue).afm(afm).homeAddress(homeAddress).build();
@@ -61,8 +59,8 @@ public static void checkPerson(Person person, ArgumentsAccessor argumentsAccesso
         assertEquals(person.getFirstName(),argumentsAccessor.get(1));
         assertEquals(person.getLastName(),argumentsAccessor.get(2));
         assertEquals(person.getGender(),argumentsAccessor.get(3));
-        assertEquals(person.getBirthDate(),argumentsAccessor.get(4));
-        assertEquals(person.getAfm(),argumentsAccessor.get(5));
+        assertEquals(person.getBirthDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")),argumentsAccessor.get(4));
+        assertEquals(person.getAfm() != null ? person.getAfm().toString() : null,argumentsAccessor.get(5));
         assertEquals(person.getHomeAddress(),argumentsAccessor.get(6));
 }
 

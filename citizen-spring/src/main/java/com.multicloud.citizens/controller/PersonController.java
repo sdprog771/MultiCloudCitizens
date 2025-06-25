@@ -14,7 +14,6 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,13 +38,13 @@ public class PersonController {
                                       @RequestParam(required = false) Long afm,
                                       @RequestParam(required = false) String homeAddress){
 
-        boolean atIsEmpty = (at == null && at.isBlank());
-        boolean firstNameIsEmpty = (firstName == null && firstName.isBlank());
-        boolean lastNameIsEmpty = (lastName == null && lastName.isBlank());
-        boolean genderIsEmpty = (gender == null && gender.isBlank());
-        boolean birthDateIsEmpty = (birthDate == null);
-        boolean afmIsEmpty = (afm == null && afm ==0);
-        boolean homeAddressIsEmpty = (homeAddress == null && homeAddress.isBlank());
+        boolean atIsEmpty = (at != null && at.isBlank());
+        boolean firstNameIsEmpty = (firstName != null && firstName.isBlank());
+        boolean lastNameIsEmpty = (lastName != null && lastName.isBlank());
+        boolean genderIsEmpty = (gender != null && gender.isBlank());
+        boolean birthDateIsEmpty = (birthDate != null);
+        boolean afmIsEmpty = (afm != null && afm ==0);
+        boolean homeAddressIsEmpty = (homeAddress != null && homeAddress.isBlank());
 
         if(!atIsEmpty || !firstNameIsEmpty || !lastNameIsEmpty || !genderIsEmpty || !birthDateIsEmpty || !afmIsEmpty || !homeAddressIsEmpty) {
             return personRespository.findByAtOrFirstNameOrLastNameOrGenderOrBirthDateOrAfmOrHomeAddress(at, firstName, lastName, gender, birthDate, afm, homeAddress);
@@ -62,7 +61,7 @@ public class PersonController {
     }
 
     @PostMapping(consumes = {"application/json", "application/xml"})
-    public ResponseEntity<Person> createPerson(@Valid @RequestBody Person person) throws UnknownHostException, URISyntaxException {
+    public ResponseEntity<?> createPerson(@Valid @RequestBody Person person) throws UnknownHostException, URISyntaxException {
         if(personRespository.findById(person.getAt()).isPresent())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Citizen already exists!");
 		else {

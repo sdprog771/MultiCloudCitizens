@@ -1,4 +1,4 @@
-package com.multicloud.citizens.validation;
+package com.multicloud.citizens.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

@@ -1,16 +1,15 @@
 package com.multicloud.citizens.model;
 
-import com.multicloud.citizens.validation.NineDigitLong;
-import com.multicloud.citizens.validation.ValidDateFormat;
+import com.multicloud.citizens.validator.NineDigitLong;
+import com.multicloud.citizens.validator.ValidDateFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
 @Entity
@@ -19,7 +18,7 @@ public class Person {
 
     @Id
     @NotBlank(message = "AT number is mandatory.")
-    @Pattern(regexp = "^[a-zA-Z0-9]{8}$", message="Insert up to eight characters, letters or numbers.")
+    @Pattern(regexp = "^[a-zA-Z0-9]{8}$", message="AT is invalid!")//message="Insert up to eight characters, letters or numbers.")
     @Column(name="at_")
     private String at;
 
@@ -42,7 +41,7 @@ public class Person {
     @NotNull(message = "Date is mandatory.")
     @ValidDateFormat
     @Basic(optional = false)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name="afm_")
     @NineDigitLong
@@ -68,20 +67,28 @@ public class Person {
         private String firstName = null;
         private String lastName = null;
         private String gender = null;
-        private Date birthDate = null;
+        private LocalDate birthDate = null;
         private Long afm = null;
         private String homeAddress = null;
 
         private static void checkSingleValue(String value, String message) throws IllegalArgumentException{
             if (value == null || value.trim().equals("")) throw new IllegalArgumentException(message + " cannot be null or empty");
         }
-        private static void checkSingleValue(Date value, String message){
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.ENGLISH);
-            String formattedDateString = formatter.format(value);
-            if (value == null || formattedDateString.trim().equals("")) throw new IllegalArgumentException(message + " cannot be null or empty");
+        private static void checkSingleValue(LocalDate value, String message){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            if (value == null) {
+                throw new IllegalArgumentException(message + " cannot be null or empty");
+            }
+            String formattedDateString = null;
+            try {
+                formattedDateString = formatter.format(value);
+            } catch (DateTimeException e) {
+                throw new IllegalArgumentException(message + " cannot be null or empty");
+            }
+            if (formattedDateString.trim().equals("")) throw new IllegalArgumentException(message + " cannot be null or empty");
         }
 
-        public Builder(String at, String firstName, String lastName, String gender, Date birthDate) throws IllegalArgumentException{
+        public Builder(String at, String firstName, String lastName, String gender, LocalDate birthDate) throws IllegalArgumentException{
             checkSingleValue(at, "AT");
             checkSingleValue(firstName, "First name");
             checkSingleValue(lastName, "Last name");
@@ -115,6 +122,7 @@ public class Person {
     }
 
     public void setAt(String at) {
+        Builder.checkSingleValue(at, "AT");
         this.at = at;
     }
 
@@ -131,6 +139,7 @@ public class Person {
     }
 
     public void setFirstName(String firstName) {
+        Builder.checkSingleValue(firstName, "First name");
         this.firstName = firstName;
     }
 
@@ -139,6 +148,7 @@ public class Person {
     }
 
     public void setLastName(String lastName) {
+        Builder.checkSingleValue(lastName, "Last name");
         this.lastName = lastName;
     }
 
@@ -147,14 +157,16 @@ public class Person {
     }
 
     public void setGender(String gender) {
+        Builder.checkSingleValue(gender, "Gender");
         this.gender = gender;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
+        Builder.checkSingleValue(birthDate, "Birthdate");
         this.birthDate = birthDate;
     }
 

@@ -1,6 +1,7 @@
 package com.multicloud.citizens.unit;
 
 import com.multicloud.citizens.model.Person;
+import com.multicloud.citizens.repository.PersonRespository;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -11,13 +12,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import com.multicloud.citizens.repository.PersonRespository;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +28,8 @@ public class DBTest implements TestInterface{
     @Autowired
     PersonRespository personRespository;
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+//    private final SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
     @ParameterizedTest
@@ -52,10 +51,10 @@ public class DBTest implements TestInterface{
             "AT3, FirstName3, LastName3, Gender3, 03-03-2000",
     })
     void checkPersonDeletion(String at, String firstName, String lastName, String gender, String birthDate) {
-        Date birthDateDate = null;
+        LocalDate birthDateDate = null;
         try {
-            birthDateDate = formatter.parse(birthDate);
-        } catch (ParseException e){
+            birthDateDate = LocalDate.parse(birthDate,formatter);
+        } catch (DateTimeParseException e){
             throw new IllegalArgumentException("birthDate is not parseable");
         }
         Person person = new Person.Builder(at, firstName, lastName, gender, birthDateDate).build();
@@ -73,10 +72,10 @@ public class DBTest implements TestInterface{
             "AT456789, FirstName3, LastName3, Gender3, 03-03-2000",
     })
     void checkPersonUpdate(String at, String firstName, String lastName, String gender, String birthDate) {
-        Date birthDateDate = null;
+        LocalDate birthDateDate = null;
         try {
-            birthDateDate = formatter.parse(birthDate);
-        } catch (ParseException e){
+            birthDateDate = LocalDate.parse(birthDate,formatter);
+        } catch (DateTimeParseException e){
             throw new IllegalArgumentException("birthDate is not parseable");
         }
         Person person = new Person.Builder(at, firstName, lastName, gender, birthDateDate).build();
@@ -96,16 +95,16 @@ public class DBTest implements TestInterface{
     @Test
     @Order(3)
     void checkPersonRetrieval() {
-        Date birthDate1 = null;
-        Date birthDate2 = null;
-        Date birthDate3 = null;
+        LocalDate birthDate1 = null;
+        LocalDate birthDate2 = null;
+        LocalDate birthDate3 = null;
 
         try {
-            birthDate1 = formatter.parse("01-01-2000");
-            birthDate2 = formatter.parse("02-02-2000");
-            birthDate3 = formatter.parse("03-03-2000");
+            birthDate1 = LocalDate.parse("01-01-2000", formatter);
+            birthDate2 = LocalDate.parse("02-02-2000", formatter);
+            birthDate3 = LocalDate.parse("03-03-2000", formatter);
 
-        } catch (ParseException e) {
+        } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("BirthDates are not parseable.");
         }
 

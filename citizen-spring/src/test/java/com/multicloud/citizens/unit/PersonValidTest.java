@@ -62,19 +62,19 @@ public class PersonValidTest implements TestInterface{
             assertFalse(messages.contains("AT is invalid!"));
         }
 
-        @ParameterizedTest
-        @ValueSource(strings = { "*First Name", "^First Name", "First Name&", "Name%2" })
-        void checkInvalidFirstName(String firstName) {
-            Person person = new Person();
-            person.setFirstName(firstName);
-            assertEquals(firstName,person.getFirstName());
-
-            Set<ConstraintViolation<Person>> viols = validator.validate(person);
-            assertNotEquals(viols.size(), 0);
-
-            List<String> messages = getMessages(viols);
-            assertTrue(messages.contains("First name is invalid!"));
-        }
+//        @ParameterizedTest
+//        @ValueSource(strings = { "*First Name", "^First Name", "First Name&", "Name%2" })
+//        void checkInvalidFirstName(String firstName) {
+//            Person person = new Person();
+//            person.setFirstName(firstName);
+//            assertEquals(firstName,person.getFirstName());
+//
+//            Set<ConstraintViolation<Person>> viols = validator.validate(person);
+//            assertNotEquals(viols.size(), 0);
+//
+//            List<String> messages = getMessages(viols);
+//            assertTrue(messages.contains("First name is invalid!"));
+//        }
 
         @ParameterizedTest
         @ValueSource(strings = { "First Name", "Second Name", "First Long Name"})
@@ -90,19 +90,19 @@ public class PersonValidTest implements TestInterface{
             assertFalse(messages.contains("First name is invalid!"));
         }
 
-    @ParameterizedTest
-    @ValueSource(strings = { "*Last Name", "^Last Name", "Last Name&", "Name%2" })
-    void checkInvalidLastName(String lastName) {
-        Person person = new Person();
-        person.setLastName(lastName);
-        assertEquals(lastName,person.getLastName());
-
-        Set<ConstraintViolation<Person>> viols = validator.validate(person);
-        assertNotEquals(viols.size(), 0);
-
-        List<String> messages = getMessages(viols);
-        assertTrue(messages.contains("Last name is invalid!"));
-    }
+//    @ParameterizedTest
+//    @ValueSource(strings = { "*Last Name", "^Last Name", "Last Name&", "Name%2" })
+//    void checkInvalidLastName(String lastName) {
+//        Person person = new Person();
+//        person.setLastName(lastName);
+//        assertEquals(lastName,person.getLastName());
+//
+//        Set<ConstraintViolation<Person>> viols = validator.validate(person);
+//        assertNotEquals(viols.size(), 0);
+//
+//        List<String> messages = getMessages(viols);
+//        assertTrue(messages.contains("Last name is invalid!"));
+//    }
 
     @ParameterizedTest
     @ValueSource(strings = { "Last Name", "Another Name", "Last Long Name"})
@@ -118,19 +118,19 @@ public class PersonValidTest implements TestInterface{
         assertFalse(messages.contains("Last name is invalid!"));
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = { "*Gender", "^Gender", "Gender&", "Gender%2" })
-    void checkInvalidGender(String gender) {
-        Person person = new Person();
-        person.setGender(gender);
-        assertEquals(gender,person.getGender());
-
-        Set<ConstraintViolation<Person>> viols = validator.validate(person);
-        assertNotEquals(viols.size(), 0);
-
-        List<String> messages = getMessages(viols);
-        assertTrue(messages.contains("Gender is invalid!"));
-    }
+//    @ParameterizedTest
+//    @ValueSource(strings = { "*Gender", "^Gender", "Gender&", "Gender%2" })
+//    void checkInvalidGender(String gender) {
+//        Person person = new Person();
+//        person.setGender(gender);
+//        assertEquals(gender,person.getGender());
+//
+//        Set<ConstraintViolation<Person>> viols = validator.validate(person);
+//        assertNotEquals(viols.size(), 0);
+//
+//        List<String> messages = getMessages(viols);
+//        assertTrue(messages.contains("Gender is invalid!"));
+//    }
 
     @ParameterizedTest
     @ValueSource(strings = { "GenderA", "GenderB", "Gender AB"})

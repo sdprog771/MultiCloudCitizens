@@ -1,6 +1,7 @@
 package com.multicloud.citizens.integration;
 
 import com.multicloud.citizens.model.Person;
+import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.jupiter.api.*;
@@ -9,15 +10,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 import static io.restassured.RestAssured.given;
@@ -28,11 +29,20 @@ import static org.hamcrest.Matchers.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DisplayName("Adding Person Testing")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestPropertySource("classpath:application-test.properties")
 public class SecondIT implements TestLifecycleLogger {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    public void setup() {
+        RestAssured.port = port;
+    }
 
     @BeforeAll
     public void initialiseRestAssuredMockMvcWebApplicationContext() {
@@ -46,9 +56,9 @@ public class SecondIT implements TestLifecycleLogger {
         given().contentType("application/json").body(person).when().post("/api/citizens").then().assertThat().statusCode(400);
     }
 
-    private Person createPerson(String at) {
+    public static Person createPerson(String at) {
         Random r = new Random();
-        Date birthDateValue = null;
+        LocalDate birthDateValue = null;
         Person person = new Person();
         person.setAt(at);
 
@@ -59,8 +69,8 @@ public class SecondIT implements TestLifecycleLogger {
         int genderId = r.nextInt(10) + 1;
         person.setGender("FirstName" + genderId);
         try{
-            birthDateValue = formatter.parse("20-10-2000");
-        }catch(ParseException e){
+            birthDateValue = LocalDate.parse("20-10-2000", formatter);
+        }catch(DateTimeParseException e){
             throw new IllegalArgumentException("The birthDate is not parseable.");
         }
         person.setBirthDate(birthDateValue);
@@ -83,7 +93,7 @@ public class SecondIT implements TestLifecycleLogger {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "AO123456", "AO123457", "AO123458" })
+    @ValueSource(strings = { "AO123457", "AO123458", "AO123459" })
     @Order(4)
     void addCorrectPerson(String at) {
         Person person = createPerson(at);
