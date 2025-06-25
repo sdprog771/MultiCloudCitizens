@@ -76,12 +76,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- domain dependency -->
-            <dependency>
-                <groupId>gr.aegean</groupId>
-                <artifactId>book-model-spring</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
