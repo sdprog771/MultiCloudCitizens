@@ -15,8 +15,6 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ExtendWith(SpringExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestClassOrder(ClassOrderer.OrderAnnotation.class)
-@Order(1)
 @DisplayName("RestPerson API Testing")
 @TestPropertySource("classpath:application-test.properties")
 public class FirstIT implements TestLifecycleLogger {
@@ -38,6 +36,6 @@ public class FirstIT implements TestLifecycleLogger {
     @Test
     @Order(2)
     public void getPersonWhileNoOneExists() throws Exception{
-        given().accept("application/json").get("/api/citizens/AO123456").then().assertThat().statusCode(404);
+        given().accept("application/json").get("/api/citizens/AO123451").then().assertThat().statusCode(404);
     }
 }

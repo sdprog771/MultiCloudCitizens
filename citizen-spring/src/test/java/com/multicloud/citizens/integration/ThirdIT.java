@@ -25,8 +25,6 @@ import static org.hamcrest.Matchers.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestClassOrder(ClassOrderer.OrderAnnotation.class)
-@Order(3)
 @DisplayName("Deleting Person Testing")
 @TestPropertySource("classpath:application-test.properties")
 public class ThirdIT implements TestLifecycleLogger {

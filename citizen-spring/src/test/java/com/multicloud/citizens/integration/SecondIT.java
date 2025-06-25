@@ -29,8 +29,6 @@ import static org.hamcrest.Matchers.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DisplayName("Adding Person Testing")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestClassOrder(ClassOrderer.OrderAnnotation.class)
-@Order(2)
 @TestPropertySource("classpath:application-test.properties")
 public class SecondIT implements TestLifecycleLogger {
     @Autowired
