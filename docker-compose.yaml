@@ -20,7 +20,7 @@ services:
       - spring.datasource.username
       - spring.datasource.password
     networks:
-      - library-net
+      - person-net
     depends_on:
       mysql:
         condition: service_healthy
@@ -44,9 +44,9 @@ services:
     volumes:
       - mysql:/var/lib/mysql
     networks:
-      - library-net
+      - person-net
 networks:
-  library-net: {}
+  person-net: {}
 volumes:
   mysql: {}
 secrets:
