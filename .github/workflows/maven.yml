@@ -61,7 +61,7 @@ jobs:
         run: |
           git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
           git checkout dev
-          git merge ${{ github.ref_name }} --no-ff -m "Auto-merge from ${{ github.ref_name }}"
+          git merge ${{ github.ref_name }} --no-ff -m "Auto-merge '${{ github.ref_name }}' into 'dev'"
           git push origin dev
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
